@@ -11,25 +11,46 @@
       font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
       background: #f0f2f5;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
       background: #1a1a2e;
       color: white;
-      padding: 16px 24px;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      flex-shrink: 0;
     }
-    header h1 { font-size: 18px; font-weight: 700; }
-    header p { font-size: 13px; color: #aaa; margin-top: 2px; }
+    header h1 { font-size: 16px; font-weight: 700; }
+    header p { font-size: 12px; color: #888; margin-top: 2px; }
 
-    .container {
+    .legend {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: #ccc;
+    }
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+
+    .main {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      padding: 16px;
-      height: calc(100vh - 68px);
+      gap: 12px;
+      padding: 12px;
+      flex: 1;
+      min-height: 0;
     }
 
     .panel {
@@ -39,194 +60,194 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      min-height: 0;
     }
 
     .panel-header {
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-bottom: 1px solid #eee;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
       flex-shrink: 0;
     }
-    .panel-header h2 { font-size: 14px; font-weight: 700; color: #333; }
+    .panel-header h2 { font-size: 13px; font-weight: 700; color: #333; }
 
-    .guide-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      padding: 10px 16px;
-      border-bottom: 1px solid #eee;
-      background: #fafafa;
-      flex-shrink: 0;
-    }
-    .tag {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      border: 1px solid;
-      cursor: default;
-      white-space: nowrap;
-    }
-    .tag-body    { color: #333; border-color: #ccc; background: #fff; }
-    .tag-heading { color: #1565C0; border-color: #90CAF9; background: #E3F2FD; }
-    .tag-byline  { color: #6A1B9A; border-color: #CE93D8; background: #F3E5F5; }
-    .tag-caption { color: #2E7D32; border-color: #A5D6A7; background: #E8F5E9; }
-    .tag-image   { color: #E65100; border-color: #FFCC80; background: #FFF3E0; }
-
-    textarea {
+    textarea#inputArea {
       flex: 1;
       width: 100%;
       border: none;
       outline: none;
       resize: none;
-      font-family: 'Malgun Gothic', '맑은 고딕', Consolas, monospace;
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
       font-size: 13px;
-      line-height: 1.7;
+      line-height: 1.8;
       padding: 14px 16px;
       color: #333;
+      min-height: 0;
     }
 
-    .output-tabs {
+    .tabs {
       display: flex;
       border-bottom: 1px solid #eee;
       flex-shrink: 0;
     }
     .tab-btn {
-      padding: 9px 18px;
+      padding: 8px 16px;
       border: none;
       background: none;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
+      font-family: inherit;
       color: #888;
       border-bottom: 2px solid transparent;
       transition: all 0.15s;
     }
-    .tab-btn.active { color: #1a1a2e; border-bottom-color: #1a1a2e; font-weight: 600; }
+    .tab-btn.active { color: #1a1a2e; border-bottom-color: #1a1a2e; font-weight: 700; }
 
-    .output-area {
-      flex: 1;
-      overflow-y: auto;
-    }
-    .output-area.hidden { display: none; }
+    .tab-panel { display: none; flex: 1; overflow-y: auto; min-height: 0; }
+    .tab-panel.active { display: flex; flex-direction: column; }
 
-    #previewArea {
-      padding: 16px;
+    /* 분석 탭 */
+    .analysis-list {
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
+    .analysis-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 3px 0;
+    }
+    .type-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      min-width: 52px;
+      text-align: center;
+    }
+    .analysis-text { font-size: 12px; color: #333; line-height: 1.5; }
 
-    #htmlOutput {
-      width: 100%;
-      height: 100%;
-      border: none;
-      outline: none;
-      resize: none;
-      font-family: Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.6;
-      padding: 14px 16px;
-      color: #333;
-      background: #f8f9fa;
-    }
+    .badge-title   { background: #1565C0; color: white; }
+    .badge-heading { background: #0277BD; color: white; }
+    .badge-body    { background: #eee; color: #555; }
+    .badge-byline  { background: #6A1B9A; color: white; }
+    .badge-caption { background: #2E7D32; color: white; }
+    .badge-image   { background: #E65100; color: white; }
 
-    .btn {
-      padding: 7px 14px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-size: 12px;
-      font-family: inherit;
-      font-weight: 600;
-      transition: background 0.15s;
+    /* 미리보기 탭 */
+    #previewContent {
+      padding: 16px 20px;
+      max-width: 780px;
     }
-    .btn-primary { background: #1a1a2e; color: white; }
-    .btn-primary:hover { background: #2a2a4e; }
-    .btn-outline { background: white; color: #333; border: 1px solid #ccc; }
-    .btn-outline:hover { background: #f5f5f5; }
-    .btn-success { background: #2E7D32; color: white; }
-    .btn-success:hover { background: #1B5E20; }
-
-    .copy-msg {
-      font-size: 11px;
-      color: #2E7D32;
-      display: none;
-    }
-    .copy-msg.show { display: inline; }
-
-    /* 이미지 삽입 모달 */
-    .modal-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-overlay.show { display: flex; }
-    .modal {
-      background: white;
-      border-radius: 12px;
-      padding: 24px;
-      width: 400px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    }
-    .modal h3 { font-size: 16px; margin-bottom: 16px; }
-    .modal label { font-size: 12px; color: #555; display: block; margin-bottom: 4px; margin-top: 12px; }
-    .modal input, .modal select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 13px;
-      font-family: inherit;
-    }
-    .modal-btns { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
-
-    /* 미리보기 스타일 */
-    .preview-article { max-width: 700px; }
-    .preview-article .prev-body {
+    .prev-title {
       font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
-      font-size: 14pt;
+      font-size: 22pt;
+      font-weight: bold;
       color: #000;
-      line-height: 1.8;
-      margin-bottom: 6px;
+      line-height: 1.4;
+      margin-bottom: 10px;
     }
-    .preview-article .prev-heading {
+    .prev-heading {
       font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
       font-size: 18pt;
       font-weight: bold;
       color: #000;
-      margin: 14px 0 6px;
+      margin: 16px 0 6px;
+      line-height: 1.5;
     }
-    .preview-article .prev-byline {
+    .prev-body {
+      font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
+      font-size: 14pt;
+      color: #000;
+      line-height: 1.8;
+      margin-bottom: 4px;
+    }
+    .prev-byline {
       font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
       font-size: 14pt;
       font-weight: bold;
       color: #000;
       text-align: right;
-      margin-bottom: 6px;
+      margin-top: 16px;
     }
-    .preview-article .prev-caption {
+    .prev-caption {
       font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
       font-size: 12pt;
       color: #000;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
-    .preview-article img {
-      display: block;
-      margin: 8px 0 4px;
+
+    /* HTML 탭 */
+    textarea#htmlOutput {
+      flex: 1;
+      width: 100%;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      padding: 14px 16px;
+      color: #333;
+      background: #f8f9fa;
+      min-height: 0;
     }
-    .preview-article .img-top { width: 676px; height: 350px; object-fit: cover; }
-    .preview-article .img-main { width: 750px; object-fit: cover; }
-    .preview-article .img-sub { width: 316px; height: 180px; object-fit: cover; }
-    .preview-article .img-placeholder {
-      background: #ddd;
+
+    /* 버튼들 */
+    .btn {
+      padding: 6px 12px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-primary { background: #1a1a2e; color: white; }
+    .btn-primary:hover { background: #2d2d50; }
+    .btn-success { background: #2E7D32; color: white; }
+    .btn-success:hover { background: #1B5E20; }
+    .btn-sm { padding: 4px 10px; font-size: 11px; }
+
+    .copy-msg {
+      font-size: 11px; color: #2E7D32;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .copy-msg.show { opacity: 1; }
+
+    /* 옵션 바 */
+    .options-bar {
+      padding: 8px 14px;
+      border-bottom: 1px solid #f0f0f0;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 14px;
+      flex-shrink: 0;
+      background: #fafafa;
+    }
+    .options-bar label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
       font-size: 12px;
-      color: #888;
-      margin: 8px 0 4px;
+      color: #555;
+      cursor: pointer;
+    }
+    .options-bar input[type=checkbox] { cursor: pointer; }
+
+    .hint {
+      font-size: 11px;
+      color: #aaa;
+      padding: 6px 14px;
+      border-bottom: 1px solid #f0f0f0;
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -234,46 +255,47 @@
 
 <header>
   <div>
-    <h1>웹기사 HTML 변환기</h1>
-    <p>맑은고딕 · 소제목 18pt · 본문 14pt · 캡션 12pt</p>
+    <h1>📰 웹기사 HTML 변환기</h1>
+    <p>맑은고딕 · 소제목 18pt · 본문 14pt · 캡션 12pt · 바이라인 bold 우측</p>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#1565C0"></div>제목</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0277BD"></div>소제목</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#aaa"></div>본문</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#6A1B9A"></div>바이라인</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2E7D32"></div>캡션</div>
   </div>
 </header>
 
-<div class="container">
+<div class="main">
+
   <!-- 왼쪽: 입력 -->
   <div class="panel">
     <div class="panel-header">
-      <h2>✏️ 기사 입력</h2>
-      <div style="display:flex; gap:6px;">
-        <button class="btn btn-outline" onclick="openImageModal()">📷 이미지 삽입</button>
-        <button class="btn btn-primary" onclick="convert()">변환 →</button>
-      </div>
+      <h2>✏️ 기사 원문 붙여넣기</h2>
+      <button class="btn btn-primary" onclick="convert()">변환 →</button>
     </div>
-
-    <div class="guide-tags">
-      <span class="tag tag-body">일반 텍스트 → 본문 (14pt)</span>
-      <span class="tag tag-heading">## 소제목 (18pt)</span>
-      <span class="tag tag-byline">@ 바이라인 (bold/우측)</span>
-      <span class="tag tag-caption">^ 캡션 (12pt)</span>
-      <span class="tag tag-image">[이미지태그]</span>
+    <div class="hint">
+      기사를 그대로 붙여넣으면 자동으로 분석합니다 &nbsp;|&nbsp;
+      <strong>첫 줄</strong> = 제목 &nbsp;·&nbsp;
+      <strong>짧은 줄</strong> = 소제목 &nbsp;·&nbsp;
+      <strong>기자/이메일</strong> = 바이라인
+      &nbsp;|&nbsp; <kbd>Ctrl+Enter</kbd> 변환
     </div>
-
-    <textarea id="inputArea" placeholder="여기에 기사를 붙여넣으세요.
+    <textarea id="inputArea" placeholder="여기에 기사를 그대로 붙여넣으세요.
 
 예시:
-## 총학생회 STeady 출범, 공약 이행 본격화
 
-제42대 총학생회 STeady가 공식 출범하며 선거 공약 이행에 나섰다. 지난 4월 STeady 선거운동본부가 당선되며 공석이었던 총학생회 자리를 메웠다.
+익숙한 공릉동을 더 가까이, '공릉동101'
 
-[이미지:TOP:https://example.com/image.jpg]
+공릉동은 우리대학 학생들에게 익숙한 공간이다...
 
-^ 사진: STeady 선거운동본부가 당선 소감을 밝히고 있다.
+익숙한 공릉동, 낯선 지역 소식
 
-## STeady가 이뤄나갈 공약
+우리대학 학생들이 공릉동의 생활 정보나...
 
-총학생회는 학생 복지 향상을 최우선 과제로 삼겠다고 밝혔다.
-
-@ 김민하, 박은혜 기자"></textarea>
+양혜정 수습기자
+hjysheep@seoultech.ac.kr"></textarea>
   </div>
 
   <!-- 오른쪽: 출력 -->
@@ -282,156 +304,276 @@
       <h2>📄 변환 결과</h2>
       <div style="display:flex; align-items:center; gap:8px;">
         <span class="copy-msg" id="copyMsg">✓ 복사됨!</span>
-        <button class="btn btn-success" onclick="copyHTML()">HTML 복사</button>
+        <button class="btn btn-success btn-sm" onclick="copyHTML()">HTML 복사</button>
       </div>
     </div>
 
-    <div class="output-tabs">
-      <button class="tab-btn active" id="tabPreview" onclick="switchTab('preview')">미리보기</button>
-      <button class="tab-btn" id="tabHTML" onclick="switchTab('html')">HTML 코드</button>
+    <div class="options-bar">
+      <label>
+        <input type="checkbox" id="includeTitle">
+        제목 포함
+      </label>
+      <label>
+        <input type="checkbox" id="autoConvert" checked>
+        붙여넣기 시 자동 변환
+      </label>
     </div>
 
-    <div class="output-area" id="previewArea">
-      <div class="preview-article" id="previewContent">
-        <p style="color:#aaa; font-size:13px; margin-top:20px;">왼쪽에 기사를 입력하고 <strong>변환</strong> 버튼을 누르세요.</p>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="analysis" onclick="switchTab('analysis')">🔍 분석 결과</button>
+      <button class="tab-btn" data-tab="preview" onclick="switchTab('preview')">👁 미리보기</button>
+      <button class="tab-btn" data-tab="html" onclick="switchTab('html')">💾 HTML 코드</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-analysis">
+      <div class="analysis-list" id="analysisList">
+        <p style="color:#aaa; font-size:12px; margin-top:20px;">기사를 붙여넣고 <strong>변환</strong>을 누르면 각 줄이 어떻게 분류됐는지 보여줍니다.</p>
       </div>
     </div>
 
-    <div class="output-area hidden" id="htmlArea">
-      <textarea id="htmlOutput" readonly placeholder="변환 후 HTML 코드가 여기에 표시됩니다."></textarea>
+    <div class="tab-panel" id="tab-preview">
+      <div id="previewContent">
+        <p style="color:#aaa; font-size:12px; margin-top:20px;">미리보기가 여기에 표시됩니다.</p>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- 이미지 삽입 모달 -->
-<div class="modal-overlay" id="imgModal">
-  <div class="modal">
-    <h3>📷 이미지 태그 삽입</h3>
-    <label>이미지 종류</label>
-    <select id="imgType">
-      <option value="TOP">탑 이미지 (676×350)</option>
-      <option value="MAIN">본문 이미지 (750px)</option>
-      <option value="SUB">서브 이미지 (316×180)</option>
-    </select>
-    <label>이미지 URL (없으면 빈칸)</label>
-    <input id="imgUrl" type="text" placeholder="https://...">
-    <label>대체 텍스트 (alt)</label>
-    <input id="imgAlt" type="text" placeholder="이미지 설명">
-    <div class="modal-btns">
-      <button class="btn btn-outline" onclick="closeImageModal()">취소</button>
-      <button class="btn btn-primary" onclick="insertImage()">삽입</button>
+    <div class="tab-panel" id="tab-html">
+      <textarea id="htmlOutput" readonly placeholder="HTML 코드가 여기에 표시됩니다."></textarea>
     </div>
   </div>
 </div>
 
 <script>
-const BODY_STYLE = "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 14pt; color: #000000; line-height: 1.8;";
-const HEADING_STYLE = "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 18pt; font-weight: bold; color: #000000; line-height: 1.6;";
-const BYLINE_STYLE = "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 14pt; font-weight: bold; color: #000000; text-align: right;";
-const CAPTION_STYLE = "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 12pt; color: #000000; line-height: 1.6;";
-
-const IMG_SIZES = {
-  TOP:  { width: 676, height: 350, label: '탑' },
-  MAIN: { width: 750, height: null, label: '본문' },
-  SUB:  { width: 316, height: 180, label: '서브' },
+/* ─── 스타일 상수 ─── */
+const S = {
+  title:   "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 18pt; font-weight: bold; color: #000000;",
+  heading: "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 18pt; font-weight: bold; color: #000000;",
+  body:    "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 14pt; color: #000000; line-height: 1.8;",
+  byline:  "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 14pt; font-weight: bold; color: #000000; text-align: right;",
+  caption: "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 12pt; color: #000000;",
 };
 
-function parseLine(line) {
-  // 이미지 태그: [이미지:TYPE:URL] 또는 [이미지:TYPE]
-  const imgMatch = line.match(/^\[이미지:(TOP|MAIN|SUB)(?::(.+))?\]$/i);
-  if (imgMatch) {
-    return { type: 'image', imgType: imgMatch[1].toUpperCase(), url: imgMatch[2] || '' };
+const BADGE = {
+  title:   ['badge-title',   '제목'],
+  heading: ['badge-heading', '소제목'],
+  body:    ['badge-body',    '본문'],
+  byline:  ['badge-byline',  '바이라인'],
+  caption: ['badge-caption', '캡션'],
+  empty:   ['badge-body',    ''],
+};
+
+/* ─── 파싱 ─── */
+function parseArticle(text) {
+  const rawLines = text.split('\n');
+  const lines = rawLines.map(l => l.trim());
+  const result = [];
+  let firstContent = true;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // 빈 줄
+    if (!line) {
+      result.push({ type: 'empty', text: '' });
+      continue;
+    }
+
+    // 수동 마커 지원 (## @ ^ 형식도 여전히 동작)
+    if (line.startsWith('## ')) {
+      result.push({ type: 'heading', text: line.slice(3).trim() });
+      continue;
+    }
+    if (line.startsWith('@')) {
+      result.push({ type: 'byline', text: line.slice(1).trim() });
+      continue;
+    }
+    if (/^\^( |$)/.test(line)) {
+      result.push({ type: 'caption', text: line.replace(/^\^( )?/, '').trim() });
+      continue;
+    }
+
+    // 첫 번째 내용 줄 = 제목
+    if (firstContent) {
+      firstContent = false;
+      result.push({ type: 'title', text: line });
+      continue;
+    }
+
+    // 이메일 → 바이라인
+    if (/^[\w.+%-]+@[\w.-]+\.[a-z]{2,}$/i.test(line)) {
+      result.push({ type: 'byline', text: line });
+      continue;
+    }
+
+    // "기자"로 끝나는 줄 → 바이라인
+    if (/(기자|수습기자|편집장|에디터|부장|차장)$/.test(line)) {
+      result.push({ type: 'byline', text: line });
+      continue;
+    }
+
+    // 소제목: 앞 줄이 비어있고 + 25자 이하
+    const prevEmpty = !lines[i - 1];   // trim 후 빈 문자열 or undefined
+    if (prevEmpty && line.length <= 25) {
+      result.push({ type: 'heading', text: line });
+      continue;
+    }
+
+    // 나머지 = 본문
+    result.push({ type: 'body', text: line });
   }
-  if (line.startsWith('## ')) return { type: 'heading', text: line.slice(3).trim() };
-  if (line.startsWith('@')) return { type: 'byline', text: line.slice(1).trim() };
-  if (line.startsWith('^ ') || line.startsWith('^')) return { type: 'caption', text: line.replace(/^\^( )?/, '').trim() };
-  return { type: 'body', text: line };
+
+  return result;
 }
 
-function escapeHTML(str) {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/* ─── HTML 생성 ─── */
+function esc(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
-function lineToHTML(parsed) {
-  if (parsed.type === 'heading') {
-    return `<p style="${HEADING_STYLE}">${escapeHTML(parsed.text)}</p>`;
+function generateHTML(parsed, includeTitle) {
+  const parts = [];
+  let bylineBuf = [];
+
+  function flushByline() {
+    if (!bylineBuf.length) return;
+    const html = bylineBuf.map(esc).join('<br>');
+    parts.push(`<p style="${S.byline}">${html}</p>`);
+    bylineBuf = [];
   }
-  if (parsed.type === 'byline') {
-    return `<p style="${BYLINE_STYLE}">${escapeHTML(parsed.text)}</p>`;
-  }
-  if (parsed.type === 'caption') {
-    return `<p style="${CAPTION_STYLE}">${escapeHTML(parsed.text)}</p>`;
-  }
-  if (parsed.type === 'image') {
-    const size = IMG_SIZES[parsed.imgType];
-    const w = size.width;
-    const h = size.height;
-    const sizeAttr = h ? `width="${w}" height="${h}"` : `width="${w}"`;
-    const alt = parsed.url ? '' : `${size.label} 이미지`;
-    if (parsed.url) {
-      return `<img src="${escapeHTML(parsed.url)}" ${sizeAttr} alt="${escapeHTML(alt)}" style="display:block; margin: 8px 0;">`;
-    } else {
-      return `<img src="" ${sizeAttr} alt="${size.label} 이미지 (${w}${h ? '×'+h : 'px'})" style="display:block; margin: 8px 0; background:#ddd;">`;
+
+  for (const item of parsed) {
+    if (item.type === 'empty') { flushByline(); continue; }
+    if (item.type === 'byline') { bylineBuf.push(item.text); continue; }
+
+    flushByline();
+
+    if (item.type === 'title') {
+      if (includeTitle) parts.push(`<p style="${S.title}">${esc(item.text)}</p>`);
+    } else if (item.type === 'heading') {
+      parts.push(`<p style="${S.heading}">${esc(item.text)}</p>`);
+    } else if (item.type === 'caption') {
+      parts.push(`<p style="${S.caption}">${esc(item.text)}</p>`);
+    } else if (item.type === 'body') {
+      parts.push(`<p style="${S.body}">${esc(item.text)}</p>`);
     }
   }
-  // body
-  if (parsed.text === '') return '';
-  return `<p style="${BODY_STYLE}">${escapeHTML(parsed.text)}</p>`;
+
+  flushByline();
+  return parts.join('\n');
 }
 
-function lineToPreview(parsed) {
-  if (parsed.type === 'heading') {
-    return `<p class="prev-heading">${escapeHTML(parsed.text)}</p>`;
+/* ─── 미리보기 생성 ─── */
+function generatePreview(parsed, includeTitle) {
+  const parts = [];
+  let bylineBuf = [];
+
+  function flushByline() {
+    if (!bylineBuf.length) return;
+    const html = bylineBuf.map(esc).join('<br>');
+    parts.push(`<p class="prev-byline">${html}</p>`);
+    bylineBuf = [];
   }
-  if (parsed.type === 'byline') {
-    return `<p class="prev-byline">${escapeHTML(parsed.text)}</p>`;
-  }
-  if (parsed.type === 'caption') {
-    return `<p class="prev-caption">${escapeHTML(parsed.text)}</p>`;
-  }
-  if (parsed.type === 'image') {
-    const size = IMG_SIZES[parsed.imgType];
-    const cls = parsed.imgType === 'TOP' ? 'img-top' : parsed.imgType === 'SUB' ? 'img-sub' : 'img-main';
-    const w = size.width;
-    const h = size.height;
-    if (parsed.url) {
-      return `<img src="${escapeHTML(parsed.url)}" class="${cls}" alt="">`;
-    } else {
-      const styleH = h ? `height:${h}px;` : 'height:200px;';
-      return `<div class="img-placeholder" style="width:${w}px; ${styleH}">[${size.label} 이미지 ${w}${h ? '×'+h : 'px'}]</div>`;
+
+  for (const item of parsed) {
+    if (item.type === 'empty') { flushByline(); continue; }
+    if (item.type === 'byline') { bylineBuf.push(item.text); continue; }
+
+    flushByline();
+
+    if (item.type === 'title') {
+      if (includeTitle) parts.push(`<p class="prev-title">${esc(item.text)}</p>`);
+    } else if (item.type === 'heading') {
+      parts.push(`<p class="prev-heading">${esc(item.text)}</p>`);
+    } else if (item.type === 'caption') {
+      parts.push(`<p class="prev-caption">${esc(item.text)}</p>`);
+    } else if (item.type === 'body') {
+      parts.push(`<p class="prev-body">${esc(item.text)}</p>`);
     }
   }
-  if (parsed.text === '') return '';
-  return `<p class="prev-body">${escapeHTML(parsed.text)}</p>`;
+
+  flushByline();
+  return parts.join('\n');
 }
 
+/* ─── 분석 결과 뷰 ─── */
+function generateAnalysis(parsed) {
+  const listEl = document.getElementById('analysisList');
+  listEl.innerHTML = '';
+
+  // 바이라인 모으기 (분석 뷰용)
+  let bylineBuf = [];
+
+  function flushByline() {
+    if (!bylineBuf.length) return;
+    const div = document.createElement('div');
+    div.className = 'analysis-item';
+    div.innerHTML = `<span class="type-badge badge-byline">바이라인</span>
+      <span class="analysis-text">${bylineBuf.map(esc).join(' / ')}</span>`;
+    listEl.appendChild(div);
+    bylineBuf = [];
+  }
+
+  let shownCount = 0;
+  for (const item of parsed) {
+    if (item.type === 'empty') {
+      flushByline();
+      continue;
+    }
+    if (item.type === 'byline') {
+      bylineBuf.push(item.text);
+      continue;
+    }
+
+    flushByline();
+
+    if (item.type === 'body' && item.text.length > 60) {
+      shownCount++;
+    }
+
+    const [badgeClass, label] = BADGE[item.type] || BADGE.body;
+    if (!label) continue;
+
+    const div = document.createElement('div');
+    div.className = 'analysis-item';
+
+    const displayText = item.text.length > 60
+      ? item.text.slice(0, 58) + '…'
+      : item.text;
+
+    div.innerHTML = `<span class="type-badge ${badgeClass}">${label}</span>
+      <span class="analysis-text">${esc(displayText)}</span>`;
+    listEl.appendChild(div);
+  }
+
+  flushByline();
+}
+
+/* ─── 메인 변환 ─── */
 function convert() {
-  const input = document.getElementById('inputArea').value;
-  const lines = input.split('\n');
+  const text = document.getElementById('inputArea').value;
+  if (!text.trim()) return;
 
-  let htmlParts = [];
-  let previewParts = [];
+  const includeTitle = document.getElementById('includeTitle').checked;
+  const parsed = parseArticle(text);
 
-  for (const line of lines) {
-    const parsed = parseLine(line.trim() === '' ? '' : line);
-    const h = lineToHTML(parsed);
-    const p = lineToPreview(parsed);
-    if (h) htmlParts.push(h);
-    if (p) previewParts.push(p);
-  }
+  generateAnalysis(parsed);
 
-  document.getElementById('htmlOutput').value = htmlParts.join('\n');
-  document.getElementById('previewContent').innerHTML = previewParts.join('\n');
+  document.getElementById('previewContent').innerHTML = generatePreview(parsed, includeTitle);
+
+  document.getElementById('htmlOutput').value = generateHTML(parsed, includeTitle);
 }
 
-function switchTab(tab) {
-  const isPreview = tab === 'preview';
-  document.getElementById('previewArea').classList.toggle('hidden', !isPreview);
-  document.getElementById('htmlArea').classList.toggle('hidden', isPreview);
-  document.getElementById('tabPreview').classList.toggle('active', isPreview);
-  document.getElementById('tabHTML').classList.toggle('active', !isPreview);
+/* ─── 탭 전환 ─── */
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
 }
 
+/* ─── HTML 복사 ─── */
 function copyHTML() {
   const html = document.getElementById('htmlOutput').value;
   if (!html) return;
@@ -442,35 +584,19 @@ function copyHTML() {
   });
 }
 
-function openImageModal() { document.getElementById('imgModal').classList.add('show'); }
-function closeImageModal() { document.getElementById('imgModal').classList.remove('show'); }
-
-function insertImage() {
-  const type = document.getElementById('imgType').value;
-  const url = document.getElementById('imgUrl').value.trim();
-  const tag = url ? `[이미지:${type}:${url}]` : `[이미지:${type}]`;
-
-  const ta = document.getElementById('inputArea');
-  const start = ta.selectionStart;
-  const before = ta.value.substring(0, start);
-  const after = ta.value.substring(ta.selectionEnd);
-  const needNewline = before.length > 0 && !before.endsWith('\n') ? '\n' : '';
-  ta.value = before + needNewline + tag + '\n' + after;
-  ta.focus();
-
-  document.getElementById('imgUrl').value = '';
-  document.getElementById('imgAlt').value = '';
-  closeImageModal();
-}
-
-// 모달 바깥 클릭 시 닫기
-document.getElementById('imgModal').addEventListener('click', function(e) {
-  if (e.target === this) closeImageModal();
+/* ─── 단축키 & 자동 변환 ─── */
+document.getElementById('inputArea').addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === 'Enter') convert();
 });
 
-// Ctrl+Enter 변환 단축키
-document.getElementById('inputArea').addEventListener('keydown', function(e) {
-  if (e.ctrlKey && e.key === 'Enter') convert();
+document.getElementById('inputArea').addEventListener('paste', () => {
+  setTimeout(() => {
+    if (document.getElementById('autoConvert').checked) convert();
+  }, 50);
+});
+
+document.getElementById('includeTitle').addEventListener('change', () => {
+  if (document.getElementById('htmlOutput').value) convert();
 });
 </script>
 </body>
