@@ -362,8 +362,9 @@ function parseArticle(text) {
       continue;
     }
 
-    // "기자"로 끝나는 줄 → 바이라인
-    if (/(기자|수습기자|편집장|에디터|부장|차장)$/.test(line)) {
+    // 짧은 줄에 기자/에디터/편집장 포함 → 바이라인
+    const BYLINE_WORDS = ['기자', '에디터', '편집장', '부장', '차장'];
+    if (line.length <= 30 && BYLINE_WORDS.some(w => line.includes(w))) {
       result.push({ type: 'byline', text: line });
       continue;
     }
