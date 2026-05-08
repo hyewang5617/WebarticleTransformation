@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>웹기사 HTML 변환기</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1a1a2e;
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header h1 { font-size: 18px; font-weight: 700; }
+    header p { font-size: 13px; color: #aaa; margin-top: 2px; }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 16px;
+      height: calc(100vh - 68px);
+    }
+
+    .panel {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .panel-header h2 { font-size: 14px; font-weight: 700; color: #333; }
+
+    .guide-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 10px 16px;
+      border-bottom: 1px solid #eee;
+      background: #fafafa;
+      flex-shrink: 0;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid;
+      cursor: default;
+      white-space: nowrap;
+    }
+    .tag-body    { color: #333; border-color: #ccc; background: #fff; }
+    .tag-heading { color: #1565C0; border-color: #90CAF9; background: #E3F2FD; }
+    .tag-byline  { color: #6A1B9A; border-color: #CE93D8; background: #F3E5F5; }
+    .tag-caption { color: #2E7D32; border-color: #A5D6A7; background: #E8F5E9; }
+    .tag-image   { color: #E65100; border-color: #FFCC80; background: #FFF3E0; }
+
+    textarea {
+      flex: 1;
+      width: 100%;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: 'Malgun Gothic', '맑은 고딕', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      padding: 14px 16px;
+      color: #333;
+    }
+
+    .output-tabs {
+      display: flex;
+      border-bottom: 1px solid #eee;
+      flex-shrink: 0;
+    }
+    .tab-btn {
+      padding: 9px 18px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 13px;
+      color: #888;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab-btn.active { color: #1a1a2e; border-bottom-color: #1a1a2e; font-weight: 600; }
+
+    .output-area {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .output-area.hidden { display: none; }
+
+    #previewArea {
+      padding: 16px;
+    }
+
+    #htmlOutput {
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      padding: 14px 16px;
+      color: #333;
+      background: #f8f9fa;
+    }
+
+    .btn {
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+    .btn-primary { background: #1a1a2e; color: white; }
+    .btn-primary:hover { background: #2a2a4e; }
+    .btn-outline { background: white; color: #333; border: 1px solid #ccc; }
+    .btn-outline:hover { background: #f5f5f5; }
+    .btn-success { background: #2E7D32; color: white; }
+    .btn-success:hover { background: #1B5E20; }
+
+    .copy-msg {
+      font-size: 11px;
+      color: #2E7D32;
+      display: none;
+    }
+    .copy-msg.show { display: inline; }
+
+    /* 이미지 삽입 모달 */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      width: 400px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .modal h3 { font-size: 16px; margin-bottom: 16px; }
+    .modal label { font-size: 12px; color: #555; display: block; margin-bottom: 4px; margin-top: 12px; }
+    .modal input, .modal select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .modal-btns { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
+
+    /* 미리보기 스타일 */
+    .preview-article { max-width: 700px; }
+    .preview-article .prev-body {
+      font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
+      font-size: 14pt;
+      color: #000;
+      line-height: 1.8;
+      margin-bottom: 6px;
+    }
+    .preview-article .prev-heading {
+      font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
+      font-size: 18pt;
+      font-weight: bold;
+      color: #000;
+      margin: 14px 0 6px;
+    }
+    .preview-article .prev-byline {
+      font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
+      font-size: 14pt;
+      font-weight: bold;
+      color: #000;
+      text-align: right;
+      margin-bottom: 6px;
+    }
+    .preview-article .prev-caption {
+      font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
+      font-size: 12pt;
+      color: #000;
+      margin-bottom: 6px;
+    }
+    .preview-article img {
+      display: block;
+      margin: 8px 0 4px;
+    }
+    .preview-article .img-top { width: 676px; height: 350px; object-fit: cover; }
+    .preview-article .img-main { width: 750px; object-fit: cover; }
+    .preview-article .img-sub { width: 316px; height: 180px; object-fit: cover; }
+    .preview-article .img-placeholder {
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #888;
+      margin: 8px 0 4px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>웹기사 HTML 변환기</h1>
+    <p>맑은고딕 · 소제목 18pt · 본문 14pt · 캡션 12pt</p>
+  </div>
+</header>
+
+<div class="container">
+  <!-- 왼쪽: 입력 -->
+  <div class="panel">
+    <div class="panel-header">
+      <h2>✏️ 기사 입력</h2>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-outline" onclick="openImageModal()">📷 이미지 삽입</button>
+        <button class="btn btn-primary" onclick="convert()">변환 →</button>
+      </div>
+    </div>
+
+    <div class="guide-tags">
+      <span class="tag tag-body">일반 텍스트 → 본문 (14pt)</span>
+      <span class="tag tag-heading">## 소제목 (18pt)</span>
+      <span class="tag tag-byline">@ 바이라인 (bold/우측)</span>
+      <span class="tag tag-caption">^ 캡션 (12pt)</span>
+      <span class="tag tag-image">[이미지태그]</span>
+    </div>
+
+    <textarea id="inputArea" placeholder="여기에 기사를 붙여넣으세요.
+
+예시:
+## 총학생회 STeady 출범, 공약 이행 본격화
+
+제42대 총학생회 STeady가 공식 출범하며 선거 공약 이행에 나섰다. 지난 4월 STeady 선거운동본부가 당선되며 공석이었던 총학생회 자리를 메웠다.
+
+[이미지:TOP:https://example.com/image.jpg]
+
+^ 사진: STeady 선거운동본부가 당선 소감을 밝히고 있다.
+
+## STeady가 이뤄나갈 공약
+
+총학생회는 학생 복지 향상을 최우선 과제로 삼겠다고 밝혔다.
+
+@ 김민하, 박은혜 기자"></textarea>
+  </div>
+
+  <!-- 오른쪽: 출력 -->
+  <div class="panel">
+    <div class="panel-header">
+      <h2>📄 변환 결과</h2>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="copy-msg" id="copyMsg">✓ 복사됨!</span>
+        <button class="btn btn-success" onclick="copyHTML()">HTML 복사</button>
+      </div>
+    </div>
+
+    <div class="output-tabs">
+      <button class="tab-btn active" id="tabPreview" onclick="switchTab('preview')">미리보기</button>
+      <button class="tab-btn" id="tabHTML" onclick="switchTab('html')">HTML 코드</button>
+    </div>
+
+    <div class="output-area" id="previewArea">
+      <div class="preview-article" id="previewContent">
+        <p style="color:#aaa; font-size:13px; margin-top:20px;">왼쪽에 기사를 입력하고 <strong>변환</strong> 버튼을 누르세요.</p>
+      </div>
+    </div>
+
+    <div class="output-area hidden" id="htmlArea">
+      <textarea id="htmlOutput" readonly placeholder="변환 후 HTML 코드가 여기에 표시됩니다."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- 이미지 삽입 모달 -->
+<div class="modal-overlay" id="imgModal">
+  <div class="modal">
+    <h3>📷 이미지 태그 삽입</h3>
+    <label>이미지 종류</label>
+    <select id="imgType">
+      <option value="TOP">탑 이미지 (676×350)</option>
+      <option value="MAIN">본문 이미지 (750px)</option>
+      <option value="SUB">서브 이미지 (316×180)</option>
+    </select>
+    <label>이미지 URL (없으면 빈칸)</label>
+    <input id="imgUrl" type="text" placeholder="https://...">
+    <label>대체 텍스트 (alt)</label>
+    <input id="imgAlt" type="text" placeholder="이미지 설명">
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeImageModal()">취소</button>
+      <button class="btn btn-primary" onclick="insertImage()">삽입</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const BODY_STYLE = "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 14pt; color: #000000; line-height: 1.8;";
+const HEADING_STYLE = "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 18pt; font-weight: bold; color: #000000; line-height: 1.6;";
+const BYLINE_STYLE = "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 14pt; font-weight: bold; color: #000000; text-align: right;";
+const CAPTION_STYLE = "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 12pt; color: #000000; line-height: 1.6;";
+
+const IMG_SIZES = {
+  TOP:  { width: 676, height: 350, label: '탑' },
+  MAIN: { width: 750, height: null, label: '본문' },
+  SUB:  { width: 316, height: 180, label: '서브' },
+};
+
+function parseLine(line) {
+  // 이미지 태그: [이미지:TYPE:URL] 또는 [이미지:TYPE]
+  const imgMatch = line.match(/^\[이미지:(TOP|MAIN|SUB)(?::(.+))?\]$/i);
+  if (imgMatch) {
+    return { type: 'image', imgType: imgMatch[1].toUpperCase(), url: imgMatch[2] || '' };
+  }
+  if (line.startsWith('## ')) return { type: 'heading', text: line.slice(3).trim() };
+  if (line.startsWith('@')) return { type: 'byline', text: line.slice(1).trim() };
+  if (line.startsWith('^ ') || line.startsWith('^')) return { type: 'caption', text: line.replace(/^\^( )?/, '').trim() };
+  return { type: 'body', text: line };
+}
+
+function escapeHTML(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function lineToHTML(parsed) {
+  if (parsed.type === 'heading') {
+    return `<p style="${HEADING_STYLE}">${escapeHTML(parsed.text)}</p>`;
+  }
+  if (parsed.type === 'byline') {
+    return `<p style="${BYLINE_STYLE}">${escapeHTML(parsed.text)}</p>`;
+  }
+  if (parsed.type === 'caption') {
+    return `<p style="${CAPTION_STYLE}">${escapeHTML(parsed.text)}</p>`;
+  }
+  if (parsed.type === 'image') {
+    const size = IMG_SIZES[parsed.imgType];
+    const w = size.width;
+    const h = size.height;
+    const sizeAttr = h ? `width="${w}" height="${h}"` : `width="${w}"`;
+    const alt = parsed.url ? '' : `${size.label} 이미지`;
+    if (parsed.url) {
+      return `<img src="${escapeHTML(parsed.url)}" ${sizeAttr} alt="${escapeHTML(alt)}" style="display:block; margin: 8px 0;">`;
+    } else {
+      return `<img src="" ${sizeAttr} alt="${size.label} 이미지 (${w}${h ? '×'+h : 'px'})" style="display:block; margin: 8px 0; background:#ddd;">`;
+    }
+  }
+  // body
+  if (parsed.text === '') return '';
+  return `<p style="${BODY_STYLE}">${escapeHTML(parsed.text)}</p>`;
+}
+
+function lineToPreview(parsed) {
+  if (parsed.type === 'heading') {
+    return `<p class="prev-heading">${escapeHTML(parsed.text)}</p>`;
+  }
+  if (parsed.type === 'byline') {
+    return `<p class="prev-byline">${escapeHTML(parsed.text)}</p>`;
+  }
+  if (parsed.type === 'caption') {
+    return `<p class="prev-caption">${escapeHTML(parsed.text)}</p>`;
+  }
+  if (parsed.type === 'image') {
+    const size = IMG_SIZES[parsed.imgType];
+    const cls = parsed.imgType === 'TOP' ? 'img-top' : parsed.imgType === 'SUB' ? 'img-sub' : 'img-main';
+    const w = size.width;
+    const h = size.height;
+    if (parsed.url) {
+      return `<img src="${escapeHTML(parsed.url)}" class="${cls}" alt="">`;
+    } else {
+      const styleH = h ? `height:${h}px;` : 'height:200px;';
+      return `<div class="img-placeholder" style="width:${w}px; ${styleH}">[${size.label} 이미지 ${w}${h ? '×'+h : 'px'}]</div>`;
+    }
+  }
+  if (parsed.text === '') return '';
+  return `<p class="prev-body">${escapeHTML(parsed.text)}</p>`;
+}
+
+function convert() {
+  const input = document.getElementById('inputArea').value;
+  const lines = input.split('\n');
+
+  let htmlParts = [];
+  let previewParts = [];
+
+  for (const line of lines) {
+    const parsed = parseLine(line.trim() === '' ? '' : line);
+    const h = lineToHTML(parsed);
+    const p = lineToPreview(parsed);
+    if (h) htmlParts.push(h);
+    if (p) previewParts.push(p);
+  }
+
+  document.getElementById('htmlOutput').value = htmlParts.join('\n');
+  document.getElementById('previewContent').innerHTML = previewParts.join('\n');
+}
+
+function switchTab(tab) {
+  const isPreview = tab === 'preview';
+  document.getElementById('previewArea').classList.toggle('hidden', !isPreview);
+  document.getElementById('htmlArea').classList.toggle('hidden', isPreview);
+  document.getElementById('tabPreview').classList.toggle('active', isPreview);
+  document.getElementById('tabHTML').classList.toggle('active', !isPreview);
+}
+
+function copyHTML() {
+  const html = document.getElementById('htmlOutput').value;
+  if (!html) return;
+  navigator.clipboard.writeText(html).then(() => {
+    const msg = document.getElementById('copyMsg');
+    msg.classList.add('show');
+    setTimeout(() => msg.classList.remove('show'), 2000);
+  });
+}
+
+function openImageModal() { document.getElementById('imgModal').classList.add('show'); }
+function closeImageModal() { document.getElementById('imgModal').classList.remove('show'); }
+
+function insertImage() {
+  const type = document.getElementById('imgType').value;
+  const url = document.getElementById('imgUrl').value.trim();
+  const tag = url ? `[이미지:${type}:${url}]` : `[이미지:${type}]`;
+
+  const ta = document.getElementById('inputArea');
+  const start = ta.selectionStart;
+  const before = ta.value.substring(0, start);
+  const after = ta.value.substring(ta.selectionEnd);
+  const needNewline = before.length > 0 && !before.endsWith('\n') ? '\n' : '';
+  ta.value = before + needNewline + tag + '\n' + after;
+  ta.focus();
+
+  document.getElementById('imgUrl').value = '';
+  document.getElementById('imgAlt').value = '';
+  closeImageModal();
+}
+
+// 모달 바깥 클릭 시 닫기
+document.getElementById('imgModal').addEventListener('click', function(e) {
+  if (e.target === this) closeImageModal();
+});
+
+// Ctrl+Enter 변환 단축키
+document.getElementById('inputArea').addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.key === 'Enter') convert();
+});
+</script>
+</body>
+</html>
