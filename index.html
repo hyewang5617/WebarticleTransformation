@@ -39,10 +39,7 @@
       font-size: 11px;
       color: #ccc;
     }
-    .legend-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-    }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
     .main {
       display: grid;
@@ -132,32 +129,22 @@
     }
     .analysis-text { font-size: 12px; color: #333; line-height: 1.5; }
 
-    .badge-title   { background: #1565C0; color: white; }
     .badge-heading { background: #0277BD; color: white; }
     .badge-body    { background: #eee; color: #555; }
     .badge-byline  { background: #6A1B9A; color: white; }
     .badge-caption { background: #2E7D32; color: white; }
-    .badge-image   { background: #E65100; color: white; }
 
     /* 미리보기 탭 */
-    #previewContent {
-      padding: 16px 20px;
-      max-width: 780px;
-    }
-    .prev-title {
-      font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
-      font-size: 22pt;
-      font-weight: bold;
-      color: #000;
-      line-height: 1.4;
-      margin-bottom: 10px;
-    }
+    #previewContent { padding: 16px 20px; max-width: 780px; }
+
+    /* 미리보기에서 소제목은 CSS 마진으로 위아래 공간 표현 */
     .prev-heading {
       font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
       font-size: 18pt;
       font-weight: bold;
       color: #000;
-      margin: 16px 0 6px;
+      margin-top: 2.8em;
+      margin-bottom: 1.4em;
       line-height: 1.5;
     }
     .prev-body {
@@ -165,6 +152,7 @@
       font-size: 14pt;
       color: #000;
       line-height: 1.8;
+      text-indent: 1em;
       margin-bottom: 4px;
     }
     .prev-byline {
@@ -173,7 +161,7 @@
       font-weight: bold;
       color: #000;
       text-align: right;
-      margin-top: 16px;
+      margin-top: 1.6em;
     }
     .prev-caption {
       font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;
@@ -198,7 +186,7 @@
       min-height: 0;
     }
 
-    /* 버튼들 */
+    /* 버튼 */
     .btn {
       padding: 6px 12px;
       border-radius: 5px;
@@ -216,15 +204,12 @@
     .btn-success:hover { background: #1B5E20; }
     .btn-sm { padding: 4px 10px; font-size: 11px; }
 
-    .copy-msg {
-      font-size: 11px; color: #2E7D32;
-      opacity: 0; transition: opacity 0.3s;
-    }
+    .copy-msg { font-size: 11px; color: #2E7D32; opacity: 0; transition: opacity 0.3s; }
     .copy-msg.show { opacity: 1; }
 
     /* 옵션 바 */
     .options-bar {
-      padding: 8px 14px;
+      padding: 7px 14px;
       border-bottom: 1px solid #f0f0f0;
       display: flex;
       align-items: center;
@@ -240,7 +225,6 @@
       color: #555;
       cursor: pointer;
     }
-    .options-bar input[type=checkbox] { cursor: pointer; }
 
     .hint {
       font-size: 11px;
@@ -256,10 +240,9 @@
 <header>
   <div>
     <h1>📰 웹기사 HTML 변환기</h1>
-    <p>맑은고딕 · 소제목 18pt · 본문 14pt · 캡션 12pt · 바이라인 bold 우측</p>
+    <p>맑은고딕 · 소제목 18pt · 본문 14pt 들여쓰기 · 캡션 12pt · 바이라인 bold 우측</p>
   </div>
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#1565C0"></div>제목</div>
     <div class="legend-item"><div class="legend-dot" style="background:#0277BD"></div>소제목</div>
     <div class="legend-item"><div class="legend-dot" style="background:#aaa"></div>본문</div>
     <div class="legend-item"><div class="legend-dot" style="background:#6A1B9A"></div>바이라인</div>
@@ -276,17 +259,12 @@
       <button class="btn btn-primary" onclick="convert()">변환 →</button>
     </div>
     <div class="hint">
-      기사를 그대로 붙여넣으면 자동으로 분석합니다 &nbsp;|&nbsp;
-      <strong>첫 줄</strong> = 제목 &nbsp;·&nbsp;
-      <strong>짧은 줄</strong> = 소제목 &nbsp;·&nbsp;
-      <strong>기자/이메일</strong> = 바이라인
+      기사 본문을 그대로 붙여넣으세요 (제목 제외) &nbsp;|&nbsp;
+      <strong>짧은 줄 + 앞 빈 줄</strong> → 소제목 &nbsp;·&nbsp;
+      <strong>기자/이메일</strong> → 바이라인
       &nbsp;|&nbsp; <kbd>Ctrl+Enter</kbd> 변환
     </div>
-    <textarea id="inputArea" placeholder="여기에 기사를 그대로 붙여넣으세요.
-
-예시:
-
-익숙한 공릉동을 더 가까이, '공릉동101'
+    <textarea id="inputArea" placeholder="여기에 기사 본문을 붙여넣으세요.
 
 공릉동은 우리대학 학생들에게 익숙한 공간이다...
 
@@ -309,10 +287,6 @@ hjysheep@seoultech.ac.kr"></textarea>
     </div>
 
     <div class="options-bar">
-      <label>
-        <input type="checkbox" id="includeTitle">
-        제목 포함
-      </label>
       <label>
         <input type="checkbox" id="autoConvert" checked>
         붙여넣기 시 자동 변환
@@ -346,20 +320,11 @@ hjysheep@seoultech.ac.kr"></textarea>
 <script>
 /* ─── 스타일 상수 ─── */
 const S = {
-  title:   "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 18pt; font-weight: bold; color: #000000;",
   heading: "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 18pt; font-weight: bold; color: #000000;",
-  body:    "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 14pt; color: #000000; line-height: 1.8;",
+  body:    "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 14pt; color: #000000; line-height: 1.8; text-indent: 1em;",
   byline:  "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 14pt; font-weight: bold; color: #000000; text-align: right;",
   caption: "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 12pt; color: #000000;",
-};
-
-const BADGE = {
-  title:   ['badge-title',   '제목'],
-  heading: ['badge-heading', '소제목'],
-  body:    ['badge-body',    '본문'],
-  byline:  ['badge-byline',  '바이라인'],
-  caption: ['badge-caption', '캡션'],
-  empty:   ['badge-body',    ''],
+  blank:   "font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; font-size: 14pt; color: #000000; line-height: 1.8;",
 };
 
 /* ─── 파싱 ─── */
@@ -367,7 +332,6 @@ function parseArticle(text) {
   const rawLines = text.split('\n');
   const lines = rawLines.map(l => l.trim());
   const result = [];
-  let firstContent = true;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -378,7 +342,7 @@ function parseArticle(text) {
       continue;
     }
 
-    // 수동 마커 지원 (## @ ^ 형식도 여전히 동작)
+    // 수동 마커 지원 (## @ ^ 형식도 동작)
     if (line.startsWith('## ')) {
       result.push({ type: 'heading', text: line.slice(3).trim() });
       continue;
@@ -389,13 +353,6 @@ function parseArticle(text) {
     }
     if (/^\^( |$)/.test(line)) {
       result.push({ type: 'caption', text: line.replace(/^\^( )?/, '').trim() });
-      continue;
-    }
-
-    // 첫 번째 내용 줄 = 제목
-    if (firstContent) {
-      firstContent = false;
-      result.push({ type: 'title', text: line });
       continue;
     }
 
@@ -411,8 +368,8 @@ function parseArticle(text) {
       continue;
     }
 
-    // 소제목: 앞 줄이 비어있고 + 25자 이하
-    const prevEmpty = !lines[i - 1];   // trim 후 빈 문자열 or undefined
+    // 소제목: i > 0 이고, 앞 줄이 비어있고, 25자 이하
+    const prevEmpty = i > 0 && !lines[i - 1];
     if (prevEmpty && line.length <= 25) {
       result.push({ type: 'heading', text: line });
       continue;
@@ -434,15 +391,21 @@ function esc(str) {
     .replace(/"/g, '&quot;');
 }
 
-function generateHTML(parsed, includeTitle) {
+const BLANK = () => `<p style="${S.blank}">&nbsp;</p>`;
+
+function generateHTML(parsed) {
   const parts = [];
   let bylineBuf = [];
+  let bylineFlushed = false;
 
   function flushByline() {
     if (!bylineBuf.length) return;
+    // 바이라인 앞에 빈 줄 1개
+    parts.push(BLANK());
     const html = bylineBuf.map(esc).join('<br>');
     parts.push(`<p style="${S.byline}">${html}</p>`);
     bylineBuf = [];
+    bylineFlushed = true;
   }
 
   for (const item of parsed) {
@@ -451,10 +414,14 @@ function generateHTML(parsed, includeTitle) {
 
     flushByline();
 
-    if (item.type === 'title') {
-      if (includeTitle) parts.push(`<p style="${S.title}">${esc(item.text)}</p>`);
-    } else if (item.type === 'heading') {
+    if (item.type === 'heading') {
+      // 소제목 위에 빈 줄 2개
+      parts.push(BLANK());
+      parts.push(BLANK());
       parts.push(`<p style="${S.heading}">${esc(item.text)}</p>`);
+      // 소제목 아래에 빈 줄 2개
+      parts.push(BLANK());
+      parts.push(BLANK());
     } else if (item.type === 'caption') {
       parts.push(`<p style="${S.caption}">${esc(item.text)}</p>`);
     } else if (item.type === 'body') {
@@ -467,7 +434,7 @@ function generateHTML(parsed, includeTitle) {
 }
 
 /* ─── 미리보기 생성 ─── */
-function generatePreview(parsed, includeTitle) {
+function generatePreview(parsed) {
   const parts = [];
   let bylineBuf = [];
 
@@ -484,9 +451,7 @@ function generatePreview(parsed, includeTitle) {
 
     flushByline();
 
-    if (item.type === 'title') {
-      if (includeTitle) parts.push(`<p class="prev-title">${esc(item.text)}</p>`);
-    } else if (item.type === 'heading') {
+    if (item.type === 'heading') {
       parts.push(`<p class="prev-heading">${esc(item.text)}</p>`);
     } else if (item.type === 'caption') {
       parts.push(`<p class="prev-caption">${esc(item.text)}</p>`);
@@ -500,11 +465,17 @@ function generatePreview(parsed, includeTitle) {
 }
 
 /* ─── 분석 결과 뷰 ─── */
+const BADGE = {
+  heading: ['badge-heading', '소제목'],
+  body:    ['badge-body',    '본문'],
+  byline:  ['badge-byline',  '바이라인'],
+  caption: ['badge-caption', '캡션'],
+};
+
 function generateAnalysis(parsed) {
   const listEl = document.getElementById('analysisList');
   listEl.innerHTML = '';
 
-  // 바이라인 모으기 (분석 뷰용)
   let bylineBuf = [];
 
   function flushByline() {
@@ -517,33 +488,17 @@ function generateAnalysis(parsed) {
     bylineBuf = [];
   }
 
-  let shownCount = 0;
   for (const item of parsed) {
-    if (item.type === 'empty') {
-      flushByline();
-      continue;
-    }
-    if (item.type === 'byline') {
-      bylineBuf.push(item.text);
-      continue;
-    }
+    if (item.type === 'empty') { flushByline(); continue; }
+    if (item.type === 'byline') { bylineBuf.push(item.text); continue; }
 
     flushByline();
 
-    if (item.type === 'body' && item.text.length > 60) {
-      shownCount++;
-    }
-
-    const [badgeClass, label] = BADGE[item.type] || BADGE.body;
-    if (!label) continue;
+    const [badgeClass, label] = BADGE[item.type] || ['badge-body', '본문'];
 
     const div = document.createElement('div');
     div.className = 'analysis-item';
-
-    const displayText = item.text.length > 60
-      ? item.text.slice(0, 58) + '…'
-      : item.text;
-
+    const displayText = item.text.length > 60 ? item.text.slice(0, 58) + '…' : item.text;
     div.innerHTML = `<span class="type-badge ${badgeClass}">${label}</span>
       <span class="analysis-text">${esc(displayText)}</span>`;
     listEl.appendChild(div);
@@ -557,14 +512,11 @@ function convert() {
   const text = document.getElementById('inputArea').value;
   if (!text.trim()) return;
 
-  const includeTitle = document.getElementById('includeTitle').checked;
   const parsed = parseArticle(text);
 
   generateAnalysis(parsed);
-
-  document.getElementById('previewContent').innerHTML = generatePreview(parsed, includeTitle);
-
-  document.getElementById('htmlOutput').value = generateHTML(parsed, includeTitle);
+  document.getElementById('previewContent').innerHTML = generatePreview(parsed);
+  document.getElementById('htmlOutput').value = generateHTML(parsed);
 }
 
 /* ─── 탭 전환 ─── */
@@ -593,10 +545,6 @@ document.getElementById('inputArea').addEventListener('paste', () => {
   setTimeout(() => {
     if (document.getElementById('autoConvert').checked) convert();
   }, 50);
-});
-
-document.getElementById('includeTitle').addEventListener('change', () => {
-  if (document.getElementById('htmlOutput').value) convert();
 });
 </script>
 </body>
